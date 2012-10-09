@@ -20,6 +20,4 @@ https://github.com/dajhorn/pkg-zfs/wiki/HOWTO-install-Ubuntu-to-a-Native-ZFS-Roo
 
   1.2 Input these commands at the terminal prompt:
 
-    wget --no-check-certificate
-    https://github.com/GR360RY/zfs-root-ansible/raw/master/tools/install.sh -O
-    - | sh
+    wget --no-check-certificate https://github.com/GR360RY/zfs-root-ansible/raw/master/tools/install.sh -O - | sh
