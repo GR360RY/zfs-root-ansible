@@ -1,0 +1,11 @@
+---
+# Prepare The Install Environment
+
+- name: "Add zfs-native repository"
+  apt_repository: repo=ppa://zfs-native/daily
+
+- name: "Install debootstrap and ubuntu-zfs"
+  apt: pkg=$item state=latest
+  with_items:
+  - debootstrap
+  - ubuntu-zfs
