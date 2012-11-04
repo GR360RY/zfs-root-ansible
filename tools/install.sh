@@ -3,9 +3,10 @@ echo "\n\033[0;32m >> Install git and Ansible requirements\033[0m"
 echo "\n\033[0;32m >> Clone Ansible\033[0m"
 git clone git://github.com/ansible/ansible.git
 echo "\n\033[0;32m >> Setup Ansible\033[0m"
-. ./ansible/hacking/env-setup
-echo "127.0.0.1" > ~/ansible_hosts
+cd ansible
+. hacking/env-setup
+echo "127.0.0.1" > ansible_hosts
 echo "\n\033[0;32m >> Clone zfs-root-ansible\033[0m]]"
 git clone git://github.com/GR360RY/zfs-root-ansible.git
 echo "\n\033[0;32m >> Run ZFS Installation Playbook\033[0m"
-./ansible/bin/ansible-playbook -i ./ansible_hosts zfs-root-ansible/zfs-root.yml
+ansible-playbook -i ansible_hosts zfs-root-ansible/zfs-root.yml
