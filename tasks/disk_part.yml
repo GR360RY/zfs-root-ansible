@@ -1,0 +1,11 @@
+---
+# Disk Partitioning
+
+- name: "Install gptfdisk"
+  action: shell /usr/bin/dpkg -i zfs-root-ansible/packages/gptfdisk_0.8.5-1_amd64.deb
+
+- name: "Clean all partitions on /dev/sda"
+  action: shell /usr/sbin/sgdisk -Z /dev/sda
+
+- name: "Create new partition layout"
+  action: shell /sbin/sfdisk -uS /dev/sda << zfs-root-ansible/files/partition_table.dat
