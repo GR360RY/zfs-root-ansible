@@ -4,7 +4,7 @@
 - name: "Add zfs-native repository"
   action: apt_repository repo=ppa:zfs-native/daily
 
-- name: "Install debootstrap and ubuntu-zfs( Make take a lot of time )"
+- name: "Install debootstrap and ubuntu-zfs (May take a lot of time)"
   apt: pkg=$item state=latest
   with_items:
   - debootstrap
