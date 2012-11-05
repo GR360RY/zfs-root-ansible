@@ -8,4 +8,9 @@
   action: file path=/mnt/boot/grub state=directory
 
 - name: "Mount boot partition"
-  action: mount name=/mnt/boot/grub src=/dev/sda1 state=mounted
+  action: mount name=/mnt/boot/grub src=/dev/sda1 state=mounted fstype=ext3
+
+- name: "Install the minimal system"
+  action: shell /usr/sbin/debootstrap precise /mnt
+  tags:
+  - bootstrap
