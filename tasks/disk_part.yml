@@ -14,7 +14,7 @@
   action: shell /sbin/mke2fs -m 0 -L /boot/grub -j /dev/sda1
 
 - name: "Create the root pool on the second patition"
-  action: shell /sbin/zpool create rpool /dev/sda2
+  action: shell /sbin/zpool create -f rpool /dev/sda2
 
 - name: "Create a ROOT filesystem in the root pool"
   action: shell /sbin/zfs create rpool/ROOT
