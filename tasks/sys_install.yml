@@ -1,0 +1,11 @@
+---
+# System Installation
+
+- name: "Import the pool"
+  action: shell /zbin/zpool import -d /dev/sda2 -R /mnt rpool
+
+- name: "Create /mnt/boot/grub"
+  action: file path=/mnt/boot/grub state=directory
+
+- name: "Mount boot partition"
+  action: mount name=/mnt/boot/grub src=/dev/sda1 state=mounted
