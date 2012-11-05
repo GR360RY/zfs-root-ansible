@@ -2,7 +2,7 @@
 # System Installation
 
 - name: "Import the pool"
-  action: shell /sbin/zpool import -d /dev/sda2 -R /mnt rpool
+  action: shell /sbin/zpool import -d /dev/disk/by-id -R /mnt rpool
 
 - name: "Create /mnt/boot/grub"
   action: file path=/mnt/boot/grub state=directory
