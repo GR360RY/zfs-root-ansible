@@ -7,4 +7,5 @@
 
   tasks:
   - include: tasks/prep_env.yml
+  - include: tasks/disk_part.yml
 
