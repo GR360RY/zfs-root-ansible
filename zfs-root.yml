@@ -9,4 +9,4 @@
   - include: tasks/prep_env.yml
   - include: tasks/disk_part.yml
   - include: tasks/sys_install.yml
-
+  - include: tasks/sys_config.yml

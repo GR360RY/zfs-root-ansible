@@ -1,0 +1,10 @@
+---
+# System Configuration
+
+- name: "Update /etc/hostname and /etc/hosts files"
+  action: copy src=/etc/$item dest=/mnt/etc/$item
+  with_items:
+  - hostname
+  - hosts
+  tags:
+  - sysconfig
