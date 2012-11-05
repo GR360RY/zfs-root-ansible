@@ -8,4 +8,4 @@
   action: shell /usr/sbin/sgdisk -Z /dev/sda
 
 - name: "Create new partition layout"
-  action: shell /sbin/sfdisk -uS /dev/sda << zfs-root-ansible/files/partition_table.dat
+  action: shell /sbin/sfdisk -uS /dev/sda < zfs-root-ansible/files/partition_table.dat
