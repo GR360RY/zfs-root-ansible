@@ -26,10 +26,10 @@
   action: shell /sbin/zfs umount -a
 
 - name: "Set the mountpoint property on the root filesystem"
-  action: /sbin/zfs set mountpoint=/ rpool/ROOT/ubuntu-1
+  action: shell /sbin/zfs set mountpoint=/ rpool/ROOT/ubuntu-1
 
 - name: "Set the bootfs property on the root pool"
-  action: /sbin/zpool set bootfs=rpool/ROOT/ubuntu-1 rpool
+  action: shell /sbin/zpool set bootfs=rpool/ROOT/ubuntu-1 rpool
 
 - name: "Export the pool"
   action: shell /sbin/zpool export rpool
