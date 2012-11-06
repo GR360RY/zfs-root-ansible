@@ -78,7 +78,7 @@
 
 # DEBIAN_FRONTEND=noninteractive should disable postinstallation tasks for grub
 - name: "Install grub with zfs support"
-  action: shell chroot /mnt DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -y install grub-pc
+  action: shell chroot /mnt /bin/bash DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -y install grub-pc
   tags:
   - sysconfig
   - debug
