@@ -59,7 +59,7 @@
   - debug
 
 - name: "Install updated kernel version from zfs-native/daily repo ( May take a lot of time )"
-  action: shell chroot /mnt /usr/bin/apt-get install --no-install-recommends linux-image linux-image-generic linux-headers-generic
+  action: shell chroot /mnt /usr/bin/apt-get install -y --no-install-recommends linux-image linux-image-generic linux-headers-generic
   tags:
   - sysconfig
   - debug
