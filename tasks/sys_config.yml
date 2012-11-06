@@ -65,16 +65,16 @@
   - debug
 
 - name: "Install ubuntu-zfs ( May take a lot of time )"
-  action: shell chroot /mnt /usr/bin/apt-get install ubuntu-zfs
+  action: shell chroot /mnt /usr/bin/apt-get -y install ubuntu-zfs
   tags:
   - sysconfig
   - debug
 
-- name: "Install grub-pc and zfs-initramfs ( May take a lot of time )"
-  action: shell chroot /mnt /usr/bin/apt-get install grub-pc zfs-initramfs
-  tags:
-  - sysconfig
-  - debug
+#- name: "Install grub-pc and zfs-initramfs ( May take a lot of time )"
+#  action: shell chroot /mnt /usr/bin/apt-get install grub-pc zfs-initramfs
+#  tags:
+#  - sysconfig
+#  - debug
 
 - name: "Update root password"
   action: shell chroot /mnt /bin/echo -e "zfs\nzfs" | passwd root
