@@ -1,0 +1,22 @@
+---
+# Unmount all partitions/virtual file systems and export zpool
+
+- name: "Unmount all file systems"
+  action: mount name=/mnt/$item state=unmounted fstype=ext3
+  with_items:
+  - boot/grub
+  - dev
+  - proc
+  - sys
+  tags:
+  - cleanup
+
+- name: "Umount all zfs volumes"
+  action: shell /sbin/zfs umount -a
+  tags:
+  - cleanup
+
+- name: "Export zpool"
+  action: shell /sbin/zpool export rpool
+  tags:
+  - cleanup
