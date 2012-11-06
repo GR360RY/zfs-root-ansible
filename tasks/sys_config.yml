@@ -20,7 +20,7 @@
   - sysconfig
 
 - name: "Rebind the virtual filesystems from the LiveCD"
-  action: shell /sbin/mount --bind /$item /mnt/$item
+  action: shell /bin/mount --bind /$item /mnt/$item
   with_items:
   - dev
   - proc
