@@ -13,3 +13,17 @@
   action: template src=templates/etc_fstab dest=/etc/fstab owner=root group=root mode=0644
   tags:
   - sysconfig
+
+- name: "Update network configuration"
+  action: copy src=files/etc_network_interfaces dest=/mnt/etc/network/interfaces
+  tags:
+  - sysconfig
+
+- name: "Rebind the virtual filesystems from the LiveCD"
+  action: shell /sbin/mount --bind /$item /mnt/$item
+  with_items:
+  - dev
+  - proc
+  - sys
+  tags:
+  - sysconfig
