@@ -70,14 +70,39 @@
   - sysconfig
   - debug
 
-#- name: "Install grub-pc and zfs-initramfs ( May take a lot of time )"
-#  action: shell chroot /mnt /usr/bin/apt-get install grub-pc zfs-initramfs
-#  tags:
-#  - sysconfig
-#  - debug
+- name: "Install zfs-initramfs"
+  action: shell chroot /mnt /usr/bin/apt-get -y install zfs-initramfs
+  tags:
+  - sysconfig
+  - debug
+
+# DEBIAN_FRONTEND=noninteractive should disable postinstallation tasks for grub
+- name: "Install grub with zfs support"
+  action: shell chroot /mnt DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -y install grub-pc
+  tags:
+  - sysconfig
+  - debug
 
 - name: "Update root password"
   action: shell chroot /mnt /bin/echo -e "zfs\nzfs" | passwd root
+  tags:
+  - sysconfig
+  - debug
+
+- name: "Refresh the initrd files"
+  action: shell chroot /mnt /usr/sbin/update-initramfs -c -k all
+  tags:
+  - sysconfig
+  - debug
+
+- name: "Update Grub"
+  action: shell chroot /mnt /usr/sbin/update-grub
+  tags:
+  - sysconfig
+  - debug
+
+- name: "Install Grub into MBR"
+  action: shell chroot /mnt /usr/sbin/grub-install /dev/sda
   tags:
   - sysconfig
   - debug
