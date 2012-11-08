@@ -84,7 +84,7 @@
   - debug
 
 - name: "Update root password"
-  action: shell chroot /mnt /bin/echo -e "zfs\nzfs" | passwd root
+  action: shell chroot /mnt /bin/echo "root:ubuntu" | chpasswd
   tags:
   - sysconfig
   - debug
