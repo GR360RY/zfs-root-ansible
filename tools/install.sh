@@ -1,4 +1,4 @@
-echo "\n\033[0;32m >> Install git and Ansible dependences\033[0m"
+echo "\n\033[0;32m >> Install git and Ansible dependencies\033[0m"
 /usr/bin/apt-get -y install git python-paramiko python-yaml python-jinja2 ssh
 echo "\n\033[0;32m >> Clone Ansible\033[0m"
 git clone git://github.com/ansible/ansible.git
