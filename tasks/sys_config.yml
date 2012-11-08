@@ -62,6 +62,12 @@
   - sysconfig
   - debug
 
+- name: "Update Grub"
+  action: shell chroot /mnt /usr/sbin/update-grub
+  tags:
+  - sysconfig
+  - debug
+
 - name: "Install ubuntu-zfs ( May take a lot of time )"
   action: shell chroot /mnt /usr/bin/apt-get -y install ubuntu-zfs
   tags:
