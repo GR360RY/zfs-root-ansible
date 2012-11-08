@@ -80,8 +80,11 @@
   - sysconfig
   - debug
 
-- name: "Copy answer file for grub-pc"
-  copy: src=files/grubpc.debconf dest=/mnt/tmp/grubpc.debconf
+- name: "Copy answers file for grub-pc and grub-install script"
+  copy: src=files/$item dest=/mnt/tmp/$item
+  with_items:
+  - grubpc.debconf
+  - grub-install.sh
   tags:
   - sysconfig
   - grub
@@ -93,7 +96,7 @@
   - grub
 
 - name: "Install grub with zfs support"
-  action: shell chroot /mnt /usr/bin/apt-get -y install grub-pc
+  action: shell chroot /mnt /bin/bash /tmp/grub-install.sh
   tags:
   - sysconfig
   - grub
