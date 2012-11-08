@@ -82,11 +82,13 @@
 
 - name: "Copy answer file for grub-pc"
   copy: src=files/grubpc.debconf dest=/mnt/tmp/grubpc.debconf
+  tags:
   - sysconfig
   - grub
 
 - name: "Load grub settings"
   action: shell chroot /mnt /usr/bin/debconf-set-selections /tmp/grubpc.debconf
+  tags:
   - sysconfig
   - grub
 
