@@ -39,7 +39,7 @@
   - sysconfig
 
 - name: "Install ubuntu-minimal and python-software-properties"
-  action: shell chroot /mnt /usr/bin/apt-get -y install ubuntu-minimal python-software-properties wireless-tools hwinfo wpasupplicant
+  action: shell chroot /mnt /usr/bin/apt-get -y install ubuntu-minimal python-software-properties wireless-tools wpasupplicant
   tags:
   - sysconfig
   - debug
