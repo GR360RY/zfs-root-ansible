@@ -96,7 +96,7 @@
   - debug
 
 - name: "Update root password"
-  action: shell chroot /mnt /bin/echo "root:ubuntu" | chpasswd
+  action: shell echo root:ubuntu | chroot /mnt /usr/sbin/chpasswd
   tags:
   - sysconfig
   - debug
