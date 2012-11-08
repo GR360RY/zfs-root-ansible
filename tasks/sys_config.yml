@@ -74,12 +74,6 @@
   - sysconfig
   - debug
 
-- name: "Install zfs-initramfs"
-  action: shell chroot /mnt /usr/bin/apt-get -y install zfs-initramfs
-  tags:
-  - sysconfig
-  - debug
-
 - name: "Copy answers file for grub-pc and grub-install script"
   copy: src=files/$item dest=/mnt/tmp/$item
   with_items:
@@ -100,6 +94,12 @@
   tags:
   - sysconfig
   - grub
+
+- name: "Install zfs-initramfs"
+  action: shell chroot /mnt /usr/bin/apt-get -y install zfs-initramfs
+  tags:
+  - sysconfig
+  - debug
 
 - name: "Update root password"
   action: shell chroot /mnt /bin/echo "root:ubuntu" | chpasswd
