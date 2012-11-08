@@ -80,7 +80,16 @@
   - sysconfig
   - debug
 
-# DEBIAN_FRONTEND=noninteractive should disable postinstallation tasks for grub
+- name: "Copy answer file for grub-pc"
+  copy: src=files/grubpc.debconf dest=/mnt/tmp/grubpc.debconf
+  - sysconfig
+  - grub
+
+- name: "Load grub settings"
+  action: shell chroot /mnt /usr/bin/debconf-set-selections /tmp/grubpc.debconf
+  - sysconfig
+  - grub
+
 - name: "Install grub with zfs support"
   action: shell chroot /mnt /usr/bin/apt-get -y install grub-pc
   tags:
