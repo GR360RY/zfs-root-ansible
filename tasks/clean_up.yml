@@ -2,7 +2,7 @@
 # Unmount all partitions/virtual file systems and export zpool
 
 - name: "Unmount all file systems"
-  action: mount name=/mnt/$item state=unmounted fstype=ext3 src=/$item
+  action: shell umount /mnt/$item
   with_items:
   - boot/grub
   - dev
