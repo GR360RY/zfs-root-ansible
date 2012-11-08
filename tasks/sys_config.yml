@@ -32,16 +32,14 @@
   action: shell chroot /mnt /usr/sbin/locale-gen en_US.UTF-8
   tags:
   - sysconfig
-  - debug
 
 - name: "Run apt-get update"
   action: shell chroot /mnt /usr/bin/apt-get update
   tags:
   - sysconfig
-  - debug
 
 - name: "Install ubuntu-minimal and python-software-properties"
-  action: shell chroot /mnt /usr/bin/apt-get install ubuntu-minimal python-software-properties
+  action: shell chroot /mnt /usr/bin/apt-get -y install ubuntu-minimal python-software-properties
   tags:
   - sysconfig
   - debug
@@ -81,7 +79,7 @@
   action: shell chroot /mnt /usr/bin/apt-get -y install grub-pc
   tags:
   - sysconfig
-  - debug
+  - grub
 
 - name: "Update root password"
   action: shell chroot /mnt /bin/echo "root:ubuntu" | chpasswd
@@ -93,16 +91,16 @@
   action: shell chroot /mnt /usr/sbin/update-initramfs -c -k all
   tags:
   - sysconfig
-  - debug
+  - grub
 
 - name: "Update Grub"
   action: shell chroot /mnt /usr/sbin/update-grub
   tags:
   - sysconfig
-  - debug
+  - grub
 
 - name: "Install Grub into MBR"
   action: shell chroot /mnt /usr/sbin/grub-install /dev/sda
   tags:
   - sysconfig
-  - debug
+  - grub
