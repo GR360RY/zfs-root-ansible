@@ -10,7 +10,7 @@
   - sysconfig
 
 - name: "Update /etc/fstab"
-  action: template src=templates/etc_fstab dest=/etc/fstab owner=root group=root mode=0644
+  action: template src=templates/etc_fstab dest=/mnt/etc/fstab owner=root group=root mode=0644
   tags:
   - sysconfig
 
