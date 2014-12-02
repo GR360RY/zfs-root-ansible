@@ -1,13 +1,11 @@
 ---
-# ZFS Installation
-#
+- hosts: all
+  sudo: true
 
-- hosts: 127.0.0.1
-  connection: local
+  vars:
 
-  tasks:
-  - include: tasks/prep_env.yml
-  - include: tasks/disk_part.yml
-  - include: tasks/sys_install.yml
-  - include: tasks/sys_config.yml
-  - include: tasks/clean_up.yml
+    root_drive: /dev/sda
+
+  roles:
+
+    - zfs-root-ansible

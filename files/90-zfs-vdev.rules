@@ -1,0 +1,2 @@
+# Create by-id links in /dev as well for zfs vdev. Needed by grub
+KERNEL=="sd*[0-9]", IMPORT{parent}=="ID_*", ENV{ID_FS_TYPE}=="zfs_member", SYMLINK+="$env{ID_BUS}-$env{ID_SERIAL}-part%n"
