@@ -1,0 +1,172 @@
+---
+# tasks file for zfs-root-ansible
+
+- name: Install SSH server
+  apt: name=ssh state=present
+  tags:
+    - usb_prep
+
+- name: Make sure SSH server is enabled and runs on boot
+  service: name=ssh state=started enabled=yes
+  tags:
+    - usb_prep
+
+- name: Install Utility packages
+  apt: name={{ item }} state=present
+  with_items:
+    - lsscsi
+    - sg3-utils
+  tags:
+    - usb_prep
+
+- name: Enable ZOL Debian Repo
+  copy: src=zol-wheezy.list dest=/etc/apt/sources.list.d/zol-wheezy.list owner=root group=root
+  register: zol_repo_status
+  tags:
+    - usb_prep
+
+- name: Get ZOL Repo key
+  apt_key: keyserver=keyserver.ubuntu.com state=present id=4D5843EA
+  tags:
+    - usb_prep
+
+- name: Update apt-cache
+  apt: update_cache=yes
+  when: zol_repo_status.changed
+  tags:
+    - usb_prep
+
+- name: Install ZFS on Linux packages
+  apt: name={{ item }} state=installed
+  with_items:
+    - build-essential
+    - spl-dkms
+    - zfs-dkms
+    - zfs-initramfs
+  tags:
+    - usb_prep
+
+- name: Add udev rule 
+  copy: src=90-zfs-vdev.rules dest=/etc/udev/rules.d/90-zfs-vdev.rules owner=root group=root
+  tags:
+    - usb_prep
+
+- name: Load zfs module
+  command: /sbin/modprobe zfs
+  changed_when: False
+  tags:
+    - zfs_bootstrap  
+
+- name: Get list of Available zfs pools
+  command: zpool list
+  register: zpool_list
+  changed_when: False
+  tags:
+    - zfs_bootstrap
+
+- name: Destroy existing rpool
+  command: zpool destroy -f rpool
+  when: "'rpool' in zpool_list.stdout"
+  tags:
+    - zfs_bootstrap
+
+- name: Remove existing MBR and GPT partition tables from {{ root_drive }}
+  command: sgdisk -Z {{ root_drive }}
+  tags:
+    - zfs_bootstrap
+
+- name: Upload partition layout file
+  copy: src=partition_table.dat dest=/tmp/partition_table.dat
+  tags:
+    - zfs_bootstrap
+
+- name: Create new partition layout on {{ root_drive }}
+  shell: /sbin/sfdisk -uS {{ root_drive }} < /tmp/partition_table.dat
+  tags:
+    - zfs_bootstrap
+
+- name: Run partprobe
+  command: partprobe
+  tags:
+    - zfs_bootstrap
+
+- name: Get root drive partition using /dev/disk/by-id
+  shell: ls -l /dev/disk/by-id | grep -v wwn | grep {{ root_drive | basename }}1 | awk '{print $(NF-2)}'
+  register: root_drive_device
+  changed_when: False
+  tags:
+    - zfs_bootstrap
+
+# - debug: var=root_drive_device.stdout
+#   tags:
+#     - zfs_bootstrap
+
+- name: Create new rpool
+  command: zpool create -f rpool {{ root_drive_device.stdout }}
+  tags:
+    - zfs_bootstrap
+
+- name: Create ROOT and Ubuntu datasets
+  zfs: name={{ item }} state=present
+  with_items:
+    - rpool/ROOT
+    - rpool/ROOT/ubuntu
+  tags:
+    - zfs_bootstrap
+
+- name: Create temporary directory for Bind Mount
+  file: path=/mnt/tmp state=directory
+  tags:
+    - zfs_bootstrap
+
+- name: Perfrom bind mount of existing root filesystem
+  mount: name=/mnt/tmp src=/ state=mounted fstype=none opts=rw,bind
+  tags:
+    - zfs_bootstrap
+
+- name: Copy existing root to new zfs root dataset
+  command: rsync -avP /mnt/tmp/. /rpool/ROOT/ubuntu/.
+  tags:
+    - zfs_bootstrap
+
+- name: Clean up /etc/fstab on rpool dataset
+  template: src=templates/fstab.j2 dest=/rpool/ROOT/ubuntu/etc/fstab owner=root group=root
+  tags:
+    - zfs_bootstrap
+
+- name: Update grub configuration file
+  template: src=templates/grub.j2 dest=/rpool/ROOT/ubuntu/etc/default/grub
+  tags:
+    - zfs_bootstrap
+
+- name: Mount virtual filesystems for grub installation
+  mount: name=/rpool/ROOT/ubuntu/{{ item.path }} src=/{{ item.path }} fstype={{ item.type }} state=mounted opts=bind
+  with_items:
+    - { path: 'proc', type: 'proc' }
+    - { path: 'sys', type: 'sysfs' }
+    - { path: 'dev', type: 'devtmpfs' }
+  tags:
+    - grub_install
+
+- name: Execute update-grub
+  shell: chroot /rpool/ROOT/ubuntu update-grub
+  tags:
+    - grub_install
+
+
+- name: Install grub on {{ root_drive }}
+  command: grub-install --boot-directory=/rpool/ROOT/ubuntu/boot {{ root_drive }}
+  tags:
+    - grub_install
+
+
+- name: Clean up mounts
+  mount: name={{ item.name }} src={{ item.src }} fstype={{ item.type }} state=unmounted opts=bind
+  with_items:
+    - { name: '/rpool/ROOT/ubuntu/proc', src: '/proc', type: 'proc' }
+    - { name: '/rpool/ROOT/ubuntu/sys', src: '/sys', type: 'sysfs' }
+    - { name: '/rpool/ROOT/ubuntu/dev', src: '/dev', type: 'devtmpfs' }
+    - { name: '/mnt/tmp', src: '/', type: 'none' }
+  tags:
+    - grub_install
+
