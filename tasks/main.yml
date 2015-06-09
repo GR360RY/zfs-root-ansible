@@ -38,7 +38,7 @@
 
 - name: Install ZFS on Linux packages
   apt: name={{ item }} state=installed
-  with_items:
+  with_items:a
     - build-essential
     - spl-dkms
     - zfs-dkms
@@ -147,6 +147,10 @@
     - { path: 'dev', type: 'devtmpfs' }
   tags:
     - grub_install
+
+- name: Update device list with udevadm
+  command: udevadm trigger
+  changed_when: false
 
 - name: Execute update-grub
   shell: chroot /rpool/ROOT/ubuntu update-grub
