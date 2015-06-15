@@ -4,7 +4,7 @@
 
   vars:
 
-    root_drive: /dev/sda
+    root_drive: /dev/sdb
 
   roles:
 

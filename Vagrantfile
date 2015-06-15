@@ -8,6 +8,7 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
 
   config.vm.provider "virtualbox" do |vb|
+    vb.gui = true
     # Create zpool disk if the file doesn't exist
     unless File.exist?(zpool_disk)
       vb.customize ['createhd', '--filename', zpool_disk, '--format', 'vmdk', '--size', 20 * 1024]

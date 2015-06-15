@@ -1,2 +1,8 @@
 # Create by-id links in /dev as well for zfs vdev. Needed by grub
-KERNEL=="sd*[0-9]", IMPORT{parent}=="ID_*", ENV{ID_FS_TYPE}=="zfs_member", SYMLINK+="$env{ID_BUS}-$env{ID_SERIAL}-part%n"
+# Force ata_id for USB disks
+KERNEL=="sd*[!0-9]", SUBSYSTEMS=="usb", IMPORT{program}="ata_id --export $devnode"
+# Force ata_id when ID_VENDOR=ATA
+KERNEL=="sd*[!0-9]", ENV{ID_VENDOR}=="ATA", IMPORT{program}="ata_id --export $devnode"
+# Create links for all disk and partitions. Needed for L2ARC or whole-disk setup
+KERNEL=="sd*[!0-9]", IMPORT{parent}=="ID_*", SYMLINK+="$env{ID_BUS}-$env{ID_SERIAL}"
+KERNEL=="sd*[0-9]", IMPORT{parent}=="ID_*", SYMLINK+="$env{ID_BUS}-$env{ID_SERIAL}-part%n"

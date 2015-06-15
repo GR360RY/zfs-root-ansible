@@ -16,6 +16,7 @@
   with_items:
     - lsscsi
     - sg3-utils
+    - software-properties-common
   tags:
     - usb_prep
 
@@ -63,7 +64,7 @@
   tags:
     - zfs_bootstrap
 
-- name: Remove existing MBR and GPT partition tables from {{ root_drive }}
+- name: Remove existing MBR and GPT partition tables from zfs root drive
   command: sgdisk -Z {{ root_drive }}
   tags:
     - zfs_bootstrap
@@ -73,7 +74,7 @@
   tags:
     - zfs_bootstrap
 
-- name: Create new partition layout on {{ root_drive }}
+- name: Create new partition layout on zfs root drive
   shell: /sbin/sfdisk -uS {{ root_drive }} < /tmp/partition_table.dat
   tags:
     - zfs_bootstrap
@@ -82,6 +83,10 @@
   command: partprobe
   tags:
     - zfs_bootstrap
+
+- name: Update device list with udevadm
+  command: udevadm trigger
+  changed_when: false
 
 - name: Get root drive partition using /dev/disk/by-id
   shell: ls -l /dev/disk/by-id | grep -v wwn | grep {{ root_drive | basename }}1 | awk '{print $(NF-2)}'
@@ -95,7 +100,7 @@
 #     - zfs_bootstrap
 
 - name: Create new rpool
-  command: zpool create -f rpool {{ root_drive_device.stdout }}
+  command: zpool create -d -o feature@async_destroy=enabled -o feature@empty_bpobj=enabled -o feature@lz4_compress=enabled -o ashift=12 -O compression=lz4 -f rpool {{ root_drive_device.stdout }}
   tags:
     - zfs_bootstrap
 
@@ -113,12 +118,12 @@
     - zfs_bootstrap
 
 - name: Perfrom bind mount of existing root filesystem
-  mount: name=/mnt/tmp src=/ state=mounted fstype=none opts=rw,bind
+  command: mount -o rw,bind / /mnt/tmp
   tags:
     - zfs_bootstrap
 
 - name: Copy existing root to new zfs root dataset
-  command: rsync -avP /mnt/tmp/. /rpool/ROOT/ubuntu/.
+  command: rsync -avPX /mnt/tmp/. /rpool/ROOT/ubuntu/.
   tags:
     - zfs_bootstrap
 
@@ -132,8 +137,10 @@
   tags:
     - zfs_bootstrap
 
+# Don't use ansible module as it requires fstab update.
+# Defining fstab=/dev/null brakes the task. 
 - name: Mount virtual filesystems for grub installation
-  mount: name=/rpool/ROOT/ubuntu/{{ item.path }} src=/{{ item.path }} fstype={{ item.type }} state=mounted opts=bind
+  command: mount -o bind -t {{ item.type }} /{{ item.path }} /rpool/ROOT/ubuntu/{{ item.path }}
   with_items:
     - { path: 'proc', type: 'proc' }
     - { path: 'sys', type: 'sysfs' }
@@ -150,15 +157,13 @@
   tags:
     - grub_install
 
-
-- name: Install grub on {{ root_drive }}
+- name: Install grub on zfs root drive
   command: grub-install --boot-directory=/rpool/ROOT/ubuntu/boot {{ root_drive }}
   tags:
     - grub_install
 
-
-- name: Clean up mounts
-  mount: name={{ item.name }} src={{ item.src }} fstype={{ item.type }} state=unmounted opts=bind
+- name: Unmount bind filesystems
+  mount: name={{ item.name }} src={{ item.src }} fstype={{ item.type }} state=unmounted
   with_items:
     - { name: '/rpool/ROOT/ubuntu/proc', src: '/proc', type: 'proc' }
     - { name: '/rpool/ROOT/ubuntu/sys', src: '/sys', type: 'sysfs' }
@@ -167,3 +172,20 @@
   tags:
     - grub_install
 
+# - name: Clean up mounts from fstab
+#   mount: name={{ item.name }} src={{ item.src }} fstype={{ item.type }} state=absent
+#   with_items:
+#     - { name: '/rpool/ROOT/ubuntu/proc', src: '/proc', type: 'proc' }
+#     - { name: '/rpool/ROOT/ubuntu/sys', src: '/sys', type: 'sysfs' }
+#     - { name: '/rpool/ROOT/ubuntu/dev', src: '/dev', type: 'devtmpfs' }
+#     - { name: '/mnt/tmp', src: '/', type: 'none' }
+#   ignore_errors: true
+#   changed_when: false
+#   tags:
+#     - grub_install
+
+- name: Remove zpool cache file
+  file: path=/etc/zfs/zpool.cache state=absent
+
+- name: Update initramfs
+  command: update-initramfs -u
