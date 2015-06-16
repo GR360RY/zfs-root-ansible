@@ -1,7 +1,7 @@
 zfs-root-ansible
 ================
 
-Automated Ubuntu 14.04 installation on zfs root filesystem. This setup assumes that you have a clean drive with for zfs installation. 
+Automated Ubuntu 14.04 installation on zfs root filesystem. This setup assumes that you have a clean drive for zfs installation. 
 
 zfs installation will be performed on full disk ( without additional ext4 partition for /boot ). Currently installation is supported only on single drive but will be extended in the future to support multiple drive for native zfs root.
 
