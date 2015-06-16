@@ -4,7 +4,7 @@ zfs-root-ansible
 Automated Ubuntu 14.04 installation on zfs root filesystem. 
 
 
-### System Requirements
+## System Requirements
 
 * 64-bit Ubuntu LiveCD or USB Flash Drive with Ubuntu Installer ( Will be refered to as LiveCD ).
 * 8GB USB stick ( Will be refered to as ZRU - ZFS Recue USB ).
@@ -12,6 +12,7 @@ Automated Ubuntu 14.04 installation on zfs root filesystem.
 * HDD/SSD Drive for root file system.
 * 2GB memory minimum ( 4GB Recommended ).
 
+## Installation
 
 ### Step 1: Preparing The Install Environment
 
@@ -62,7 +63,40 @@ Open zfs-root.yml in your favorit editor and modify `root_drive` variable if req
 
     ansible-playbook -c local -K -i "localhost," zfs-root.yml
 
-Reboot you pc following installation completion.
+### Step 4: Changing boot order
+
+* Reboot you pc following ansible-playbook run.
+* Change default boot device in BIOS to new HD with zfs root file system.
+
+## Development and Testing with Vagrant
+
+If you want to test out the configuration in VirtualMachine, install requirements and follow the below guide:
+
+### Requirements
+
+* Install [Vagrant](http://www.vagrantup.com/)
+* Install [Oracle VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+* Install [Ansible](http://docs.ansible.com/intro_installation.html)
+
+###  Testing
+
+Clone zfs-root-ansible repository:
+
+    cd ~
+    git clone https://github.com/GR360RY/zfs-root-ansible.git
+    cd zfs-root-ansible
+
+Run vagrant:
+
+    vagrant up
+
+Reboot your vagrant box following the provisioning:
+
+    vagrant reload
+
+* Focus on VirtualBox Screen and Press __(F12)__.
+* Press __2__ to boot with newly deployed zfs drive. 
+
 
 License
 -------

@@ -95,10 +95,6 @@
   tags:
     - zfs_bootstrap
 
-# - debug: var=root_drive_device.stdout
-#   tags:
-#     - zfs_bootstrap
-
 - name: Create new rpool
   command: zpool create -d -o feature@async_destroy=enabled -o feature@empty_bpobj=enabled -o feature@lz4_compress=enabled -o ashift=12 -O compression=lz4 -f rpool {{ root_drive_device.stdout }}
   tags:
@@ -171,18 +167,6 @@
     - { name: '/mnt/tmp', src: '/', type: 'none' }
   tags:
     - grub_install
-
-# - name: Clean up mounts from fstab
-#   mount: name={{ item.name }} src={{ item.src }} fstype={{ item.type }} state=absent
-#   with_items:
-#     - { name: '/rpool/ROOT/ubuntu/proc', src: '/proc', type: 'proc' }
-#     - { name: '/rpool/ROOT/ubuntu/sys', src: '/sys', type: 'sysfs' }
-#     - { name: '/rpool/ROOT/ubuntu/dev', src: '/dev', type: 'devtmpfs' }
-#     - { name: '/mnt/tmp', src: '/', type: 'none' }
-#   ignore_errors: true
-#   changed_when: false
-#   tags:
-#     - grub_install
 
 - name: Remove zpool cache file
   file: path=/etc/zfs/zpool.cache state=absent
