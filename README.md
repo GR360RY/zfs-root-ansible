@@ -61,12 +61,12 @@ Exemine your storage device list:
 
 Note the drive device that you will perform installation on ( ex: /dev/sdg )
 
-Open zfs-root.yml in your favorit editor and modify `root_drive` variable if required.
+Open zfsroot.yml in your favorit editor and modify `root_drive` variable if required.
 
 ### Step 3: Running Ansible Playbook
 
 
-    ansible-playbook -c local -K -i "localhost," zfs-root.yml
+    ansible-playbook -c local -K -i "localhost," zfsroot.yml
 
 ### Step 4: Changing boot order
 
