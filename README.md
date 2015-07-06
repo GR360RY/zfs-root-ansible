@@ -24,7 +24,10 @@ https://github.com/zfsonlinux/pkg-zfs/wiki/HOWTO-install-Ubuntu-14.04-or-Later-t
 1. Boot into Ubuntu LiveCD
 2. Perform Ubuntu Installation on ZRU ( Make sure GRUB is installed on USB Flash Drive ).
 3. Power off you PC and remove LiveCD Installation Media.
-4. Boot from ZRU.
+
+> WARNING: Make sure to boot your System using MBR and not EFI Boot
+
+4. Boot from ZRU. 
 5. Login and open terminal.
 
 
