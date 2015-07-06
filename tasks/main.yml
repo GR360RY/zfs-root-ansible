@@ -81,7 +81,8 @@
     - zfs_bootstrap
 
 - name: Run partprobe
-  command: partprobe
+  command: partprobe {{ root_drive }}
+  ignore_errors: true
   tags:
     - zfs_bootstrap
 
