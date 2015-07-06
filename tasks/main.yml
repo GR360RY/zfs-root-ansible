@@ -75,7 +75,8 @@
     - zfs_bootstrap
 
 - name: Create new partition layout on zfs root drive
-  shell: /sbin/sfdisk -uS {{ root_drive }} < /tmp/partition_table.dat
+  shell: /sbin/sfdisk --foce -q --uS {{ root_drive }} < /tmp/partition_table.dat
+  ignore_errors: true
   tags:
     - zfs_bootstrap
 
