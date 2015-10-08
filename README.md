@@ -11,6 +11,8 @@ https://github.com/zfsonlinux/pkg-zfs/wiki/HOWTO-install-Ubuntu-14.04-or-Later-t
 
 ## System Requirements
 
+> WARNING: You system bios should be configured to use legacy boot mode ( BIOS ) and EUFI.
+
 * 64-bit Ubuntu LiveCD or USB Flash Drive with Ubuntu Installer ( Will be refered to as LiveCD ).
 * 8GB USB stick ( Will be refered to as ZRU - ZFS Recue USB ).
 * x86_64 compatible PC.
