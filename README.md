@@ -8,10 +8,11 @@ zfs installation will be performed on full disk ( without additional ext4 partit
 Ansible automation is based on the zfs-pkg Wiki Guide:
 https://github.com/zfsonlinux/pkg-zfs/wiki/HOWTO-install-Ubuntu-14.04-or-Later-to-a-Native-ZFS-Root-Filesystem
 
+:warning: WARNING: You system bios should be configured to use legacy boot mode ( BIOS ) and **NOT** EUFI.
 
 ## System Requirements
 
-> WARNING: You system bios should be configured to use legacy boot mode ( BIOS ) and EUFI.
+
 
 * 64-bit Ubuntu LiveCD or USB Flash Drive with Ubuntu Installer ( Will be refered to as LiveCD ).
 * 8GB USB stick ( Will be refered to as ZRU - ZFS Recue USB ).
